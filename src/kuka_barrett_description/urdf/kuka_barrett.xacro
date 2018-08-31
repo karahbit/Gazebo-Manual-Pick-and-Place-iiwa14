@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<robot name="kuka_barrett" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- kuka. It has already a world link. I do not need to make one.
+  the default value for arg [name] is [iiwa]. Then the name of the EE will be [iiwa_link_ee] -->
+ <xacro:include filename="$(find kuka_barrett_description)/urdf/iiwa14.urdf.xacro"/>
+
+  <!-- barrett. [base_link] is the root for barrett hand  -->
+ <xacro:include filename="$(find kuka_barrett_description)/urdf/bh282.urdf.xacro"/>
+
+<xacro:bhand_macro name="bh" parent="iiwa_link_ee">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+</xacro:bhand_macro>
+
+<gazebo>
+  <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+    <robotNamespace>/</robotNamespace>
+  </plugin>
+</gazebo>
+
+</robot>
+
+
+

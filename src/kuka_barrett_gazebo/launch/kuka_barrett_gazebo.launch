@@ -1,0 +1,38 @@
+<launch>
+
+  <!-- creating the arguments for gazebo. we can change their values when running the roslaunch
+  , for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <!-- run an empty world in gazebo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!-- if I have another world that I want use -->
+    <arg name="world_name" value="$(find kuka_barrett_gazebo)/worlds/my_world.world"/>
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+<!--node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /-->
+<!--node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" /-->
+
+<!-- Load the URDF into the ROS Parameter Server  -->
+  <param name="robot_description"
+    command="$(find xacro)/xacro $(find kuka_barrett_description)/urdf/kuka_barrett.xacro" />
+
+  <!-- Spawn the URDF. Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+    args="-param robot_description -urdf -model robot"/>
+
+</launch>
+
+
+
+
+

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+ 
+<!-- Launch Gazebo -->
+<include file="$(find kuka_barrett_gazebo)/launch/kuka_barrett_gazebo.launch" />
+
+<!-- Load joint controller CONFIGURATIONS from YAML file to parameter server -->
+<rosparam file="$(find kuka_barrett_control)/config/barrett_control.yaml" command="load"/>
+
+<!-- load the controllers: can automatically load, start or stoop a set of controllers at once -->
+ <node name="barrett_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+   output="screen" ns="/" args="
+   bh_j11_position_controller
+   bh_j12_position_controller
+   bh_j22_position_controller
+   bh_j32_position_controller" />
+
+<rosparam file="$(find kuka_barrett_control)/config/kuka_control.yaml" command="load"/>
+ <node name="kuka_controller_spawner" pkg="controller_manager" type="spawner" args="arm_controller" />
+
+<!-- Robot state publisher -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <!--param name="publish_frequency" type="double" value="50.0" /-->
+    <!--param name="tf_prefix" type="string" value="" /-->
+  </node>
+
+
+</launch>
